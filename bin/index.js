@@ -18,7 +18,7 @@ const c = {
 console.log(`
 ${c.cyan(c.bold("┌──────────────────────────────────────────────┐"))}
 ${c.cyan(c.bold("│"))}                                              ${c.cyan(c.bold("│"))}
-${c.cyan(c.bold("│"))}   ${c.bold("create-trpc-setup")} ${c.dim("v3.0.0")}                  ${c.cyan(c.bold("│"))}
+${c.cyan(c.bold("│"))}   ${c.bold("create-trpc-setup")} ${c.dim("v1.0.2")}                  ${c.cyan(c.bold("│"))}
 ${c.cyan(c.bold("│"))}   ${c.dim("tRPC v11 · Next.js App Router · RSC ready")} ${c.cyan(c.bold("│"))}
 ${c.cyan(c.bold("│"))}                                              ${c.cyan(c.bold("│"))}
 ${c.cyan(c.bold("└──────────────────────────────────────────────┘"))}
