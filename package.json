@@ -1,6 +1,6 @@
 {
   "name": "create-trpc-setup",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "One-command tRPC v11 setup for Next.js App Router — RSC, Suspense, ErrorBoundary ready",
   "bin": {
     "create-trpc-setup": "bin/index.js"
