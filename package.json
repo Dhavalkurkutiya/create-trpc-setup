@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "One-command tRPC v11 setup for Next.js App Router — RSC, Suspense, ErrorBoundary ready",
   "bin": {
-    "create-trpc-setup": "./bin/index.js"
+    "create-trpc-setup": "bin/index.js"
   },
   "keywords": [
     "trpc",
@@ -11,10 +11,16 @@
     "app-router",
     "rsc",
     "tanstack-query",
-    "cli"
+    "cli",
+    "setup"
   ],
+  "author": "DhavalKurkutiya",
   "license": "MIT",
   "engines": {
     "node": ">=18"
-  }
+  },
+  "files": [
+    "bin/index.js",
+    "README.md"
+  ]
 }
