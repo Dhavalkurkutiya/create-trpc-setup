@@ -122,9 +122,9 @@ export function MyClient() {
 npm run dev
 ```
 
-Open: [http://localhost:3000/\_trpc-test](http://localhost:3000/_trpc-test)
+Open: [http://localhost:3000/trpc-test](http://localhost:3000/trpc-test)
 
-Delete `app/_trpc-test/` after confirming ✅
+Delete `app/trpc-test/` after confirming ✅
 
 ---
 
