@@ -1,23 +1,51 @@
 # create-trpc-setup
 
-> One-command tRPC v11 setup for Next.js App Router
+[![npm version](https://img.shields.io/npm/v/create-trpc-setup?color=red&label=npm)](https://www.npmjs.com/package/create-trpc-setup)
+[![npm downloads](https://img.shields.io/npm/dm/create-trpc-setup?color=blue)](https://www.npmjs.com/package/create-trpc-setup)
+[![tRPC v11](https://img.shields.io/badge/tRPC-v11%20ready-398CCB)](https://trpc.io)
+[![Next.js](https://img.shields.io/badge/Next.js-App%20Router-black)](https://nextjs.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## Usage
+> One-command tRPC v11 setup for **existing** Next.js App Router projects.
 
 ```bash
 npx create-trpc-setup
 ```
 
-Run inside your existing Next.js project. That's it — everything is automatic.
+![Demo](./demo.gif)
 
 ---
 
-## What it does automatically
+## Why this exists
 
-1. ✅ Detects your Next.js project (`src/` or root layout)
-2. ✅ Installs tRPC v11 + TanStack React Query + Zod + react-error-boundary
-3. ✅ Generates all tRPC files
-4. ✅ **Auto-patches your `layout.tsx`** — adds `TRPCReactProvider` inside `<body>`
+`create-t3-app` is great — but only for **new** projects.
+
+`create-trpc-setup` works with projects you've **already started**.
+
+|                               | `create-t3-app` | `create-trpc-setup` |
+| ----------------------------- | --------------- | ------------------- |
+| New projects                  | ✅              | ✅                  |
+| **Existing projects**         | ❌              | ✅                  |
+| Auto-patches layout.tsx       | ❌              | ✅                  |
+| Clerk / NextAuth detection    | ❌              | ✅                  |
+| tsconfig path alias detection | ❌              | ✅                  |
+| tRPC v11 + RSC                | ✅              | ✅                  |
+
+---
+
+## What it does
+
+```bash
+npx create-trpc-setup
+```
+
+1. ✅ Detects `src/` or root layout
+2. ✅ Reads `tsconfig.json` for your path alias (`@/*`, `~/*`, etc.)
+3. ✅ Detects Clerk or NextAuth — configures context automatically
+4. ✅ Installs all dependencies with your package manager
+5. ✅ Generates all 6 tRPC files
+6. ✅ **Auto-patches `layout.tsx`** — adds `TRPCReactProvider` inside `<body>`
+7. ✅ Creates `/trpc-status` page to verify setup
 
 ---
 
@@ -25,74 +53,31 @@ Run inside your existing Next.js project. That's it — everything is automatic.
 
 ```
 trpc/
-├── init.ts              ← tRPC init, baseProcedure, createTRPCRouter
+├── init.ts              ← context, baseProcedure, protectedProcedure, Zod error formatter
 ├── query-client.ts      ← SSR-safe QueryClient
 ├── client.tsx           ← TRPCReactProvider + useTRPC hook
-├── server.tsx           ← prefetch, HydrateClient, caller
+├── server.tsx           ← prefetch, HydrateClient
 └── routers/
-    └── _app.ts          ← your app router
+    └── _app.ts          ← starter router with health + greet (Zod)
 
 app/api/trpc/[trpc]/
-└── route.ts             ← API route handler
+└── route.ts             ← API handler with real headers + dev error logging
 
-app/_trpc-test/          ← delete after confirming setup works
+app/trpc-status/         ← test page (delete after confirming ✅)
 ```
 
 ---
 
-## layout.tsx — auto-patched
+## Usage after setup
 
-Before:
-
-```tsx
-<body>
-  {children}
-  <Toaster />
-</body>
-```
-
-After:
+**Server Component:**
 
 ```tsx
-<body>
-  <TRPCReactProvider>
-    {children}
-    <Toaster />
-  </TRPCReactProvider>
-</body>
-```
-
-A `.backup` file is saved before any changes.  
-Restore anytime: the original is at `layout.tsx.backup`
-
----
-
-## Adding procedures
-
-Edit `trpc/routers/_app.ts`:
-
-```ts
-export const appRouter = createTRPCRouter({
-  // your procedures here
-  getUser: baseProcedure
-    .input(z.object({ id: z.string() }))
-    .query(async ({ input }) => {
-      return { id: input.id, name: "John" };
-    }),
-});
-```
-
----
-
-## Server Component usage
-
-```tsx
-// app/page.tsx — Server Component
 import { HydrateClient, prefetch, trpc } from "@/trpc/server";
 import { MyClient } from "./my-client";
 
 export default function Page() {
-  prefetch(trpc.health.queryOptions());
+  prefetch(trpc.greet.queryOptions({ name: "World" }));
   return (
     <HydrateClient>
       <MyClient />
@@ -101,36 +86,45 @@ export default function Page() {
 }
 ```
 
+**Client Component:**
+
 ```tsx
-// my-client.tsx — Client Component
 "use client";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
 
 export function MyClient() {
   const trpc = useTRPC();
-  const { data } = useSuspenseQuery(trpc.health.queryOptions());
-  return <div>{data.status}</div>;
+  const { data } = useSuspenseQuery(trpc.greet.queryOptions({ name: "World" }));
+  return <div>{data.message}</div>;
 }
 ```
 
----
+**Protected route:**
 
-## Test your setup
-
-```bash
-npm run dev
+```ts
+// trpc/routers/_app.ts
+getProfile: protectedProcedure.query(({ ctx }) => {
+  return { userId: ctx.userId }; // guaranteed non-null
+}),
 ```
 
-Open: [http://localhost:3000/trpc-test](http://localhost:3000/trpc-test)
+---
 
-Delete `app/trpc-test/` after confirming ✅
+## Supported
+
+- **Package managers**: `npm` · `pnpm` · `yarn` · `bun`
+- **Next.js**: 14 · 15+
+- **Auth**: Clerk · NextAuth / Auth.js · None
+- **Path aliases**: `@/*` · `~/*` · any custom alias from `tsconfig.json`
 
 ---
 
-## Supported package managers
+## Author
 
-Auto-detected: `npm` · `pnpm` · `yarn` · `bun`
+**Dhaval Kurkutiya** — [GitHub](https://github.com/Dhavalkurkutiya) · [npm](https://www.npmjs.com/~dhavalkurkutiya)
+
+If this saved you time, please ⭐ the repo — it helps others find it!
 
 ---
 

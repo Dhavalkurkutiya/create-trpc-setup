@@ -1,23 +1,47 @@
 {
   "name": "create-trpc-setup",
-  "version": "1.0.3",
-  "description": "One-command tRPC v11 setup for Next.js App Router — RSC, Suspense, ErrorBoundary ready",
+  "version": "1.0.4",
+  "description": "One-command tRPC v11 setup for existing Next.js App Router projects — auto-detects Clerk, NextAuth, path alias, and patches layout.tsx",
   "bin": {
     "create-trpc-setup": "bin/index.js"
   },
   "keywords": [
     "trpc",
+    "trpc-v11",
     "nextjs",
+    "next",
     "app-router",
     "rsc",
+    "react-server-components",
     "tanstack-query",
+    "react-query",
+    "zod",
+    "clerk",
+    "nextauth",
     "cli",
-    "setup"
+    "setup",
+    "boilerplate",
+    "scaffold",
+    "typescript",
+    "trpc-nextjs",
+    "trpc-setup",
+    "nextjs-trpc"
   ],
-  "author": "DhavalKurkutiya",
+  "author": {
+    "name": "DhavalKurkutiya",
+    "url": "https://github.com/Dhavalkurkutiya"
+  },
   "license": "MIT",
   "engines": {
     "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Dhavalkurkutiya/create-trpc-setup"
+  },
+  "homepage": "https://github.com/Dhavalkurkutiya/create-trpc-setup#readme",
+  "bugs": {
+    "url": "https://github.com/Dhavalkurkutiya/create-trpc-setup/issues"
   },
   "files": [
     "bin/index.js",
